@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Globe, Fingerprint, Wand2, Film, FolderOpen, RefreshCw, Settings2, ChevronRight, ChevronDown, Zap, Building2, Library, FileText, Trash2 } from 'lucide-react';
+import { Globe, Fingerprint, Wand2, Film, FolderOpen, RefreshCw, Settings2, ChevronRight, ChevronDown, Zap, Building2, Library, FileText, Trash2, Sun, Moon } from 'lucide-react';
 import { Button, Badge } from '../ui';
 import NotificationPanel from './NotificationPanel';
 import { useAppStore } from '../store';
@@ -53,6 +53,10 @@ export default function Header({
   const flushRef = useRef(null);
   const flushBtnRef = useRef(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
+
+  const theme = useAppStore(s => s.theme);
+  const setTheme = useAppStore(s => s.setTheme);
+  const isLight = theme === 'gruvbox-light';
 
   // Dynamically compute dropdown position from button rect
   const computePos = useCallback(() => {
@@ -173,23 +177,21 @@ export default function Header({
         )}
       </div>
 
-      {/* Center: logo */}
-      <div className="hq-col-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f3a5b6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="hq-logo-mark">
-          <circle cx="12" cy="12" r="10" opacity="0.18" fill="#f3a5b6" />
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 6v12" />
-          <path d="M8 9v6" />
-          <path d="M16 9v6" />
-        </svg>
-        <span className="hq-logo-word">
-          Omni<span className="hq-logo-word__accent">Voice</span>
-        </span>
-      </div>
+      {/* Center: logo — hidden */}
+      <div className="hq-col-center" />
 
       {/* Right: wave + sys stats. UI scale (S/M/L) lives in the bottom
           LogsFooter bar so all app-wide chrome sits together. */}
       <div className="hq-col-right">
+        <button
+          type="button"
+          className="hq-theme-toggle"
+          onClick={() => setTheme(isLight ? 'gruvbox' : 'gruvbox-light')}
+          title={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+          aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
+        >
+          {isLight ? <Moon size={14} /> : <Sun size={14} />}
+        </button>
         <NotificationPanel onNavigate={setMode} />
         <WaveBars color={view.accent} active={modelStatus === 'ready' || modelStatus === 'loading'} />
         {sysStats && (

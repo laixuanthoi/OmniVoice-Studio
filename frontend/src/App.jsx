@@ -77,6 +77,8 @@ function App() {
     if (theme && theme !== 'gruvbox') {
       document.documentElement.setAttribute('data-theme', theme);
     }
+    // Sync color-scheme for native scrollbars/form controls
+    document.documentElement.style.colorScheme = theme === 'gruvbox-light' ? 'light' : 'dark';
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const mode = useAppStore(s => s.mode);
   const setMode = useAppStore(s => s.setMode);

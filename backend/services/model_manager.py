@@ -257,6 +257,33 @@ def should_preload_tts_asr() -> bool:
     return _env_flag("OMNIVOICE_PRELOAD_TTS_ASR")
 
 
+def should_compile_model(torch, device: str) -> bool:
+    """Whether torch.compile can safely run for the selected device."""
+    if _env_flag("OMNIVOICE_DISABLE_TORCH_COMPILE"):
+        logger.info("torch.compile disabled by OMNIVOICE_DISABLE_TORCH_COMPILE.")
+        return False
+    if device != "cuda":
+        return False
+
+    try:
+        major, minor = torch.cuda.get_device_capability(0)
+        if major < 7:
+            device_name = torch.cuda.get_device_name(0)
+            logger.info(
+                "torch.compile skipped: %s has CUDA capability %s.%s, "
+                "but Triton requires >= 7.0.",
+                device_name,
+                major,
+                minor,
+            )
+            return False
+    except Exception as exc:
+        logger.info("torch.compile skipped: CUDA capability check failed: %s", exc)
+        return False
+
+    return True
+
+
 def _load_model_sync():
     global model
     from utils.hf_progress import register_listener, unregister_listener
@@ -296,7 +323,7 @@ def _load_model_sync():
         )
 
         try:
-            if device == "cuda":
+            if should_compile_model(torch, device):
                 _set_loading("compiling", "Compiling model (torch.compile)…")
                 _model.llm = torch.compile(_model.llm, mode="reduce-overhead")
                 logger.info("torch.compile applied.")

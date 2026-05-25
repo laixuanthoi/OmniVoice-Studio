@@ -105,6 +105,9 @@
 .clone-profile-card     { position: relative; }
 
 /* File-drop + record-button row */
+.clone-hidden-file {
+  display: none;
+}
 .clone-drop-row {
   display: flex;
   gap: 8px;

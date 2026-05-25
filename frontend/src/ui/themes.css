@@ -175,6 +175,85 @@
   --chrome-border:       #45475a;
 }
 
+/* ── Gruvbox Light ─────────────────────────────────────────────────── */
+[data-theme="gruvbox-light"] {
+  /* ── New semantic tokens ── */
+  --color-fg:            #3c3836;
+  --color-fg-muted:      #665c54;
+  --color-fg-subtle:     #928374;
+  --color-fg-inverse:    #fbf1c7;
+
+  --color-bg:            #fbf1c7;
+  --color-bg-elev-1:     rgba(235, 219, 178, 0.95);
+  --color-bg-elev-2:     rgba(213, 196, 161, 0.50);
+  --color-bg-elev-3:     rgba(189, 174, 147, 0.30);
+
+  --color-border:        rgba(60, 56, 54, 0.12);
+  --color-border-strong: rgba(60, 56, 54, 0.22);
+  --color-border-warm:   rgba(177, 98, 134, 0.12);
+
+  --color-brand:         #b16286;
+  --color-brand-hover:   #8f3f71;
+  --color-brand-glow:    rgba(177, 98, 134, 0.25);
+
+  --color-accent:        #b57614;
+  --color-success:       #79740e;
+  --color-warn:          #af3a03;
+  --color-danger:        #9d0006;
+  --color-info:          #076678;
+  --color-muted-mono:    #504945;
+
+  --shadow-sm:    0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md:    0 2px 8px rgba(0, 0, 0, 0.10);
+  --shadow-lg:    0 8px 24px -12px rgba(0, 0, 0, 0.15);
+  --shadow-xl:    0 20px 40px -10px rgba(0, 0, 0, 0.18);
+  --shadow-glow:  0 0 12px var(--color-brand-glow);
+  --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  --focus-ring:
+    0 0 0 2px var(--color-bg),
+    0 0 0 4px rgba(177, 98, 134, 0.4);
+
+  /* ── Legacy vars used by most components ── */
+  --primary:             #b16286;
+  --primary-hover:       #8f3f71;
+  --accent:              #b57614;
+  --bg:                  #fbf1c7;
+  --glass-bg:            rgba(235, 219, 178, 0.92);
+  --glass-border:        rgba(60, 56, 54, 0.12);
+  --glass-shadow:        0 2px 8px 0 rgba(0, 0, 0, 0.10);
+  --text-primary:        #3c3836;
+  --text-secondary:      #665c54;
+
+  /* ── Chrome tokens (header, footer, sidebar) ── */
+  --chrome-bg:            #ebdbb2;
+  --chrome-border:        rgba(60, 56, 54, 0.10);
+  --chrome-border-strong: rgba(60, 56, 54, 0.18);
+  --chrome-fg:            #3c3836;
+  --chrome-fg-muted:      #665c54;
+  --chrome-fg-dim:        #928374;
+  --chrome-accent:        #b16286;
+  --chrome-accent-bg:     rgba(177, 98, 134, 0.10);
+  --chrome-accent-border: rgba(177, 98, 134, 0.30);
+  --chrome-severity-err:  #9d0006;
+  --chrome-severity-warn: #b57614;
+  --chrome-severity-ok:   #79740e;
+  --chrome-hover-bg:      rgba(60, 56, 54, 0.06);
+
+  /* ── Surface alpha vars — light-friendly overrides ── */
+  --surface-overlay-dark:   rgba(60, 56, 54, 0.06);
+  --surface-overlay-dark2:  rgba(60, 56, 54, 0.10);
+  --surface-overlay-dark3:  rgba(60, 56, 54, 0.08);
+  --surface-overlay-dark4:  rgba(60, 56, 54, 0.04);
+  --surface-overlay-light:  rgba(60, 56, 54, 0.08);
+  --surface-overlay-light2: rgba(60, 56, 54, 0.10);
+  --surface-overlay-light3: rgba(60, 56, 54, 0.15);
+  --surface-overlay-light4: rgba(60, 56, 54, 0.18);
+  --surface-range-track:    rgba(60, 56, 54, 0.15);
+  --surface-val-bubble:     rgba(60, 56, 54, 0.08);
+  --surface-val-bubble-border: rgba(60, 56, 54, 0.10);
+}
+
 /* ── System-preference sync ────────────────────────────────────────── */
 /* When theme is "auto", the light theme activates on light-mode OS.
    Currently we don't ship a light theme; this is scaffolding for

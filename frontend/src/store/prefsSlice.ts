@@ -9,7 +9,7 @@
 import type { StateCreator } from 'zustand';
 
 export type TranslateQuality = 'fast' | 'cinematic';
-export type ThemeId = 'gruvbox' | 'midnight' | 'nord' | 'solarized' | 'rose-pine' | 'catppuccin';
+export type ThemeId = 'gruvbox' | 'gruvbox-light' | 'midnight' | 'nord' | 'solarized' | 'rose-pine' | 'catppuccin';
 
 export interface PrefsSlice {
   translateQuality: TranslateQuality;
@@ -61,11 +61,25 @@ export const createPrefsSlice: StateCreator<PrefsSlice, [], [], PrefsSlice> = (s
   theme: 'gruvbox',
   setTheme: (id) => {
     set({ theme: id });
+    // Remove the FOUC-prevention inline style tag injected by index.html
+    // so it doesn't fight the cascade when switching themes at runtime.
+    const fouc = document.getElementById('fouc-theme');
+    if (fouc) fouc.remove();
+
     // Apply to DOM — gruvbox is default (no attribute)
     if (id === 'gruvbox') {
       document.documentElement.removeAttribute('data-theme');
+      document.documentElement.style.background = '';
     } else {
       document.documentElement.setAttribute('data-theme', id);
+    }
+    // Set color-scheme so native scrollbars/form controls match
+    document.documentElement.style.colorScheme = id === 'gruvbox-light' ? 'light' : 'dark';
+    // Update html background for light theme
+    if (id === 'gruvbox-light') {
+      document.documentElement.style.background = '#ebdbb2';
+    } else {
+      document.documentElement.style.background = '#1d2021';
     }
   },
 });

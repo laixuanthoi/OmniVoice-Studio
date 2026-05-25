@@ -45,7 +45,7 @@
 /* primary — solid gradient fill with glow */
 .ui-btn--primary {
   background: linear-gradient(135deg, var(--chrome-accent, #d3869b), color-mix(in srgb, var(--chrome-accent, #d3869b) 70%, #c07090));
-  color: #1d2021;
+  color: var(--color-fg-inverse);
   border-color: transparent;
   font-weight: 600;
   box-shadow:

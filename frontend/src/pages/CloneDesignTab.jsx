@@ -175,7 +175,7 @@ export default function CloneDesignTab(props) {
                   type="file"
                   accept="audio/*,.mp3,.wav,.m4a,.flac,.ogg"
                   onChange={e => { const f = e.target.files[0]; ingestRefAudio(f); e.target.value = ''; }}
-                  className="dub-hidden-file"
+                  className="clone-hidden-file"
                   id="audio-upload"
                 />
                 <label

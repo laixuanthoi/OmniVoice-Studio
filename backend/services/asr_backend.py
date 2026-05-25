@@ -31,6 +31,28 @@ from typing import Optional
 logger = logging.getLogger("omnivoice.asr")
 
 
+def _pick_ctranslate2_device() -> tuple[str, str]:
+    """Pick a CTranslate2 device/compute type supported by this hardware."""
+    try:
+        import torch
+        if torch.cuda.is_available():
+            major, minor = torch.cuda.get_device_capability(0)
+            if major < 7:
+                device_name = torch.cuda.get_device_name(0)
+                logger.info(
+                    "ASR using CUDA float32: %s has CUDA capability %s.%s; "
+                    "CTranslate2 float16 is not supported efficiently.",
+                    device_name,
+                    major,
+                    minor,
+                )
+                return "cuda", "float32"
+            return "cuda", "float16"
+    except Exception as exc:
+        logger.info("ASR CUDA detection failed; falling back to CPU int8: %s", exc)
+    return "cpu", "int8"
+
+
 # ── Protocol ────────────────────────────────────────────────────────────────
 
 
@@ -70,15 +92,7 @@ class WhisperXBackend(ASRBackend):
 
     @staticmethod
     def _pick_device() -> tuple[str, str]:
-        # CUDA fp16 when available; otherwise CPU int8 (fastest CPU path,
-        # negligible WER regression vs fp32 for whisper-large-v3).
-        try:
-            import torch
-            if torch.cuda.is_available():
-                return "cuda", "float16"
-        except Exception:
-            pass
-        return "cpu", "int8"
+        return _pick_ctranslate2_device()
 
     @classmethod
     def is_available(cls) -> tuple[bool, str]:
@@ -284,16 +298,10 @@ class FasterWhisperBackend(ASRBackend):
             return
         from faster_whisper import WhisperModel
         # Device / compute-type auto-pick:
-        #   - CUDA present → GPU fp16
-        #   - Apple Silicon / CPU → CPU int8 (fastest on CPU, negligible
-        #     WER regression vs fp32 for whisper-large-v3)
-        device, compute_type = "cpu", "int8"
-        try:
-            import torch
-            if torch.cuda.is_available():
-                device, compute_type = "cuda", "float16"
-        except Exception:
-            pass
+        #   - CUDA capability >= 7.0 → GPU fp16
+        #   - older CUDA GPUs → GPU fp32 (CTranslate2 rejects fp16 there)
+        #   - CPU → int8 (fastest CPU path, negligible WER regression)
+        device, compute_type = _pick_ctranslate2_device()
         logger.info(
             "faster-whisper loading %s on %s (%s)",
             self._model_name, device, compute_type,

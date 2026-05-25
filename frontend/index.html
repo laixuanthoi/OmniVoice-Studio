@@ -1,12 +1,49 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background:#1d2021">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OmniVoice Studio</title>
+    <title>OV Studio</title>
+    <!-- Apply persisted theme before React mounts to prevent FOUC.
+         We inject critical CSS vars inline so the very first paint uses
+         the correct colours — before index.css or any component CSS loads. -->
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('omnivoice.app');
+          if (raw) {
+            var state = JSON.parse(raw);
+            var theme = state && state.state && state.state.theme;
+            if (theme && theme !== 'gruvbox') {
+              document.documentElement.setAttribute('data-theme', theme);
+            }
+            if (theme === 'gruvbox-light') {
+              document.documentElement.style.colorScheme = 'light';
+              document.documentElement.style.background = '#ebdbb2';
+              // Inject critical light-theme vars before any CSS loads
+              var s = document.createElement('style');
+              s.id = 'fouc-theme';
+              s.textContent = [
+                ':root {',
+                '  --chrome-bg: #ebdbb2 !important;',
+                '  --chrome-fg: #3c3836 !important;',
+                '  --chrome-border: rgba(60,56,54,0.10) !important;',
+                '  --chrome-fg-muted: #665c54 !important;',
+                '  --chrome-fg-dim: #928374 !important;',
+                '  --bg: #fbf1c7 !important;',
+                '  --text-primary: #3c3836 !important;',
+                '  --text-secondary: #665c54 !important;',
+                '}'
+              ].join('\n');
+              document.head.appendChild(s);
+            }
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body style="background:#1d2021">
+  <body style="background:inherit">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -40,10 +40,9 @@ dependencies = [
     "webdataset",
     "numpy",
     "soundfile",
-    # pkg_resources is used by whisperx/faster-whisper at runtime.
-    # On Python 3.12+ it's no longer bundled by default — pin a modern
-    # setuptools to guarantee it's present (fixes #58).
-    "setuptools>=75.0",
+    # pkg_resources is used by ctranslate2/whisperx at runtime.
+    # setuptools 81 deprecates it for removal, so keep a version that still ships it.
+    "setuptools>=75.0,<81.0",
     "psutil>=7.2.2",
     # Pinned to 3.x — pyannote 4.x removed `use_auth_token` from `Inference`
     # which whisperx 3.4.2 still passes, blowing up `whisperx.load_model()`
